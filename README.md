@@ -1,8 +1,8 @@
-# Få en lampa att blinka med kod 💡
+# Få en lampa att blinka med kod
 
 ## Översikt
 
-> 💬 **Kort sagt:** Vi skriver lite kod som får en lampa att tändas och släckas, om och om igen.
+> **Kort sagt:** Vi skriver lite kod som får en lampa att tändas och släckas, om och om igen.
 
 Här lär du dig att få en liten lampa att blinka med hjälp av kod.
 Du behöver ingen förkunskap.
@@ -18,7 +18,7 @@ Du behöver ingen förkunskap.
 
 ## Mikroprocessor – kortet vi använder
 
-> 💬 **Kort sagt:** Kortet är en liten dator som kan slå på och stänga av ström när koden säger det.
+> **Kort sagt:** Kortet är en liten dator som kan slå på och stänga av ström när koden säger det.
 
 Kortet heter **NodeMCU** och har chippet **ESP8266**.
 Tänk på det som en **strömbrytare som styrs av kod**.
@@ -34,7 +34,7 @@ Det kan slå på och stänga av ström, och det har WiFi.
 
 ## Koppling
 
-> 💬 **Kort sagt:** Strömmen går ut från kortet, genom motståndet (en broms för strömmen) och lampan, och tillbaka till kortet.
+> **Kort sagt:** Strömmen går ut från kortet, genom motståndet (en broms för strömmen) och lampan, och tillbaka till kortet.
 
 Strömmen måste kunna gå **ett helt varv**, som vatten i ett rör som går runt.
 
@@ -48,7 +48,7 @@ Strömmen måste kunna gå **ett helt varv**, som vatten i ett rör som går run
 
 ## Två basfunktionerna i Arduino
 
-> 💬 **Kort sagt:** `setup` görs en gång vid start. `loop` görs om och om igen.
+> **Kort sagt:** `setup` görs en gång vid start. `loop` görs om och om igen.
 
 Alla Arduino-program har två delar:
 
@@ -63,7 +63,7 @@ Tänk dig en vanlig dag:
 
 ## Ställ in pinnarna (portinitialisering)
 
-> 💬 **Kort sagt:** Innan vi använder en pinne berättar vi vad den ska göra. Här ska D1 skicka ut ström.
+> **Kort sagt:** Innan vi använder en pinne berättar vi vad den ska göra. Här ska D1 skicka ut ström.
 
 Kortet har små metallstift som heter **pinnar**.
 Innan vi använder en pinne måste vi säga vad den ska göra:
@@ -79,7 +79,7 @@ pinMode(D1, OUTPUT);   // "Pinne D1, du ska skicka ut ström"
 
 ## Kod med förklaringar
 
-> 💬 **Kort sagt:** HIGH tänder lampan, LOW släcker den, och delay väntar. Det upprepas, så lampan blinkar.
+> **Kort sagt:** HIGH tänder lampan, LOW släcker den, och delay väntar. Det upprepas, så lampan blinkar.
 
 Hela koden finns i filen [blink.ino](blink.ino).
 
@@ -115,7 +115,7 @@ Kortet skriver också till datorn. Öppna **Serial Monitor** och välj **115200*
 
 ## Om något krånglar
 
-> 💬 **Kort sagt:** Lyser lampan inte är det oftast för att den sitter åt fel håll.
+> **Kort sagt:** Lyser lampan inte är det oftast för att den sitter åt fel håll.
 
 | Problem | Prova det här |
 |---|---|
