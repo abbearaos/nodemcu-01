@@ -1,79 +1,103 @@
-# Blinka en LED med NodeMCU
+# Få en lampa att blinka med kod 💡
 
 ## Översikt
-Vi får en röd LED att blinka med ett NodeMCU-kort och lite kod.
+Här lär du dig att få en liten lampa att blinka med hjälp av kod.
+Du behöver ingen förkunskap.
 
-![LED:n lyser](bilder/led-lyser.jpg)
+![Lampan lyser](bilder/led-lyser.jpg)
 
-## Mikroprocessor
-**NodeMCU (Plusivo)** med chippet **ESP8266**. Det har inbyggt WiFi.
+**Det här behövs:**
+- 1 NodeMCU-kort (en pytteliten dator)
+- 1 röd lampa (LED)
+- 1 motstånd (150 Ω)
+- 1 sladd och ett kopplingsdäck
+- En USB-kabel och en dator med programmet Arduino IDE
+
+## Mikroprocessor – kortet vi använder
+Kortet heter **NodeMCU** och har chippet **ESP8266**.
+Tänk på det som en **strömbrytare som styrs av kod**.
+Det kan slå på och stänga av ström, och det har WiFi.
 
 ![NodeMCU-kortet](bilder/nodemcu-kort.jpg)
 
-Inställningar i Arduino IDE:
-- **Preferences → Additional boards manager URLs:**
-  `http://arduino.esp8266.com/stable/package_esp8266com_index.json`
-- **Boards Manager:** installera `esp8266`
-- **Board:** `NodeMCU 1.0 (ESP-12E Module)`
+**Så gör du kortet redo i Arduino IDE:**
+1. Öppna **Preferences** och klistra in den här länken under *Additional boards manager URLs*:
+   `http://arduino.esp8266.com/stable/package_esp8266com_index.json`
+2. Öppna **Boards Manager**, sök på `esp8266` och klicka **Install**.
+3. Välj kortet **NodeMCU 1.0 (ESP-12E Module)**.
 
 ## Koppling
-Det behövs: 1 röd LED, 1 motstånd (150 Ω) och 1 sladd.
+Strömmen måste kunna gå **ett helt varv**, som vatten i ett rör som går runt.
 
 ![Kopplingsschema](bilder/koppling.svg)
 
-- LED:ns **långa ben (+)** mot motståndet och D1
-- LED:ns **korta ben (−)** mot GND
-- Delar i **samma rad** på kopplingsdäcket har kontakt
+- **Motståndet** är en **broms**. Utan den går lampan sönder.
+- Lampan har ett **långt ben** och ett **kort ben**.
+  Det långa benet ska vara mot strömmen (D1).
+  Sitter lampan åt fel håll lyser den inte.
+- På kopplingsdäcket har alla hål i **samma rad** kontakt med varandra.
 
 ## Två basfunktionerna i Arduino
+Alla Arduino-program har två delar:
+
 ```cpp
-void setup() { }   // körs EN gång vid start
-void loop()  { }   // körs om och om igen
+void setup() { }   // görs EN gång, när kortet startar
+void loop()  { }   // görs OM OCH OM IGEN, hela tiden
 ```
 
-## Portinitialisering
-Innan en pinne används måste man säga vad den ska göra:
+Tänk dig en vanlig dag:
+- **setup** är när du vaknar och gör dig redo. Det gör du en gång.
+- **loop** är något du gör om och om igen.
+
+## Portinitialisering – säg vad pinnen ska göra
+Kortet har små metallstift som heter **pinnar**.
+Innan vi använder en pinne måste vi säga vad den ska göra:
+
 ```cpp
-pinMode(D1, OUTPUT);
+pinMode(D1, OUTPUT);   // "Pinne D1, du ska skicka ut ström"
 ```
 
-| Läge | Betyder |
+| Ord | Betyder |
 |---|---|
-| `OUTPUT` | skickar ut ström (t.ex. till en LED) |
-| `INPUT` | läser in (t.ex. en knapp) |
-| `INPUT_PULLUP` | läser in, är HIGH som standard |
+| `OUTPUT` | pinnen **skickar ut** ström, till exempel till en lampa |
+| `INPUT` | pinnen **lyssnar**, till exempel på en knapp |
 
 ## Kod med förklaringar
-Hela koden finns i [blink.ino](blink.ino).
+Hela koden finns i filen [blink.ino](blink.ino).
 
 ```cpp
-const int LED = D1;    // pinnen där LED:n sitter
-const int TID = 500;   // en halv sekund
-
 void setup() {
-  pinMode(LED, OUTPUT);   // D1 ska skicka ut ström
-  Serial.begin(115200);   // kontakt med datorn
+  pinMode(D1, OUTPUT);     // D1 ska skicka ut ström
+  Serial.begin(115200);    // kortet får prata med datorn
 }
 
 void loop() {
-  digitalWrite(LED, HIGH);      // LED tänds
-  Serial.println("Lampa på");
-  delay(TID);                   // vänta
+  digitalWrite(D1, HIGH);        // ström PÅ  → lampan tänds
+  Serial.println("Lampa på");    // skriv till datorn
+  delay(500);                    // vänta en halv sekund
 
-  digitalWrite(LED, LOW);       // LED släcks
-  Serial.println("Lampa av");
-  delay(TID);                   // vänta
+  digitalWrite(D1, LOW);         // ström AV  → lampan släcks
+  Serial.println("Lampa av");    // skriv till datorn
+  delay(500);                    // vänta en halv sekund
 }
 ```
 
-Resultat i Serial Monitor (115200 baud):
+**Förklaring:**
+| Kod | Betyder |
+|---|---|
+| `HIGH` | ström **på** |
+| `LOW` | ström **av** |
+| `delay(500)` | **vänta** 500 millisekunder (en halv sekund) |
+
+Eftersom koden ligger i **loop** händer det om och om igen. Därför **blinkar** lampan.
+
+Kortet skriver också till datorn. Öppna **Serial Monitor** och välj **115200**:
 
 ![Serial Monitor](bilder/serial-monitor.jpg)
 
-## Vanliga problem
-| Problem | Lösning |
+## Om något krånglar
+| Problem | Prova det här |
 |---|---|
-| `bad CPU type in executable` (Mac) | Kör `softwareupdate --install-rosetta --agree-to-license` |
-| LED:n lyser inte | Vänd på LED:n |
-| Vit LED lyser inte | Använd en röd LED, den behöver mindre ström |
-| Inbyggda lampan gör tvärtom | På NodeMCU är `LOW` = på för den inbyggda lampan |
+| Lampan lyser inte | **Vänd** på lampan |
+| En vit lampa lyser inte | Använd en **röd** lampa, den behöver mindre ström |
+| Felet `bad CPU type` på Mac | Skriv i Terminal: `softwareupdate --install-rosetta --agree-to-license` |
