@@ -1,19 +1,17 @@
 // Blinkprogram för NodeMCU
-// En röd lampa på D1 tänds och släcks varje halv sekund.
+// Lampan på D1 tänds och släcks varannan halvsekund.
 
-// setup() görs EN gång, när kortet startar
 void setup() {
   pinMode(D1, OUTPUT);     // D1 ska skicka ut ström
-  Serial.begin(115200);    // kortet får prata med datorn
+  Serial.begin(115200);    // så att kortet kan skriva till datorn
 }
 
-// loop() görs OM OCH OM IGEN
 void loop() {
-  digitalWrite(D1, HIGH);        // ström PÅ  -> lampan tänds
-  Serial.println("Lampa på");    // skriv till datorn
-  delay(500);                    // vänta en halv sekund
+  digitalWrite(D1, HIGH);        // ström på, lampan tänds
+  Serial.println("Lampa på");
+  delay(500);                    // vänta 0,5 sekunder
 
-  digitalWrite(D1, LOW);         // ström AV  -> lampan släcks
-  Serial.println("Lampa av");    // skriv till datorn
-  delay(500);                    // vänta en halv sekund
+  digitalWrite(D1, LOW);         // ström av, lampan släcks
+  Serial.println("Lampa av");
+  delay(500);                    // vänta 0,5 sekunder
 }

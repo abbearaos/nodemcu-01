@@ -1,124 +1,99 @@
-# Få en lampa att blinka med kod
+# Min första blinkande lampa med NodeMCU
+
+![Min röda lampa lyser](bilder/led-lyser.jpg)
 
 ## Översikt
+**Målet:** få en lampa att tändas och släckas av sig själv, om och om igen.
 
-> **Kort sagt:** Vi skriver lite kod som får en lampa att tändas och släckas, om och om igen.
+Det jag använde:
+- ett NodeMCU-kort
+- en röd lampa (LED)
+- ett motstånd på 150 Ω
+- en sladd och ett kopplingsdäck
+- USB-kabel och programmet Arduino IDE
 
-Här lär du dig att få en liten lampa att blinka med hjälp av kod.
-Du behöver ingen förkunskap.
+## Mikroprocessor
+**Kortet är en liten dator som kan slå på och av ström när koden säger det.**
 
-![Lampan lyser](bilder/led-lyser.jpg)
+Mitt kort heter NodeMCU (märket Plusivo) och har chippet ESP8266.
+Det kan också använda WiFi, men det behövdes inte här.
 
-**Det här behövs:**
-- 1 NodeMCU-kort (en pytteliten dator)
-- 1 röd lampa (LED)
-- 1 motstånd (150 Ω)
-- 1 sladd och ett kopplingsdäck
-- En USB-kabel och en dator med programmet Arduino IDE
+![Plusivo NodeMCU](bilder/nodemcu-kort.jpg)
 
-## Mikroprocessor – kortet vi använder
-
-> **Kort sagt:** Kortet är en liten dator som kan slå på och stänga av ström när koden säger det.
-
-Kortet heter **NodeMCU** och har chippet **ESP8266**.
-Tänk på det som en **strömbrytare som styrs av kod**.
-Det kan slå på och stänga av ström, och det har WiFi.
-
-![NodeMCU-kortet](bilder/nodemcu-kort.jpg)
-
-**Så gör du kortet redo i Arduino IDE:**
-1. Öppna **Preferences** och klistra in den här länken under *Additional boards manager URLs*:
+Innan Arduino IDE känner igen kortet måste man:
+1. lägga in den här länken under *Preferences → Additional boards manager URLs*
    `http://arduino.esp8266.com/stable/package_esp8266com_index.json`
-2. Öppna **Boards Manager**, sök på `esp8266` och klicka **Install**.
-3. Välj kortet **NodeMCU 1.0 (ESP-12E Module)**.
+2. installera **esp8266** i *Boards Manager*
+3. välja kortet **NodeMCU 1.0 (ESP-12E Module)**
 
-## Koppling
-
-> **Kort sagt:** Strömmen går ut från kortet, genom motståndet (en broms för strömmen) och lampan, och tillbaka till kortet.
-
-Strömmen måste kunna gå **ett helt varv**, som vatten i ett rör som går runt.
+## Så kopplade jag
+**Strömmen måste kunna gå runt, från kortet och tillbaka igen.**
 
 ![Kopplingsschema](bilder/koppling.svg)
 
-- **Motståndet** är en **broms**. Utan den går lampan sönder.
-- Lampan har ett **långt ben** och ett **kort ben**.
-  Det långa benet ska vara mot strömmen (D1).
-  Sitter lampan åt fel håll lyser den inte.
-- På kopplingsdäcket har alla hål i **samma rad** kontakt med varandra.
+- D1 på kortet → motståndet → lampans långa ben
+- lampans korta ben → sladd → GND på kortet
+
+Motståndet minskar strömmen. Utan det kan lampan gå sönder.
+Lampan lyser bara åt ett håll, så det långa benet ska vara mot D1.
 
 ## Två basfunktionerna i Arduino
-
-> **Kort sagt:** `setup` görs en gång vid start. `loop` görs om och om igen.
-
-Alla Arduino-program har två delar:
+**Allt i setup körs en gång. Allt i loop körs om och om igen.**
 
 ```cpp
-void setup() { }   // görs EN gång, när kortet startar
-void loop()  { }   // görs OM OCH OM IGEN, hela tiden
+void setup() {
+  // körs en gång när kortet startar
+}
+
+void loop() {
+  // körs hela tiden, gång på gång
+}
 ```
 
-Tänk dig en vanlig dag:
-- **setup** är när du vaknar och gör dig redo. Det gör du en gång.
-- **loop** är något du gör om och om igen.
+## Portinitialisering
+**Innan jag använder en pinne talar jag om vad den ska göra.**
 
-## Ställ in pinnarna (portinitialisering)
-
-> **Kort sagt:** Innan vi använder en pinne berättar vi vad den ska göra. Här ska D1 skicka ut ström.
-
-Kortet har små metallstift som heter **pinnar**.
-Innan vi använder en pinne måste vi säga vad den ska göra:
+Pinnarna är metallstiften på kortet. Jag vill att D1 ska skicka ut ström:
 
 ```cpp
-pinMode(D1, OUTPUT);   // "Pinne D1, du ska skicka ut ström"
+pinMode(D1, OUTPUT);
 ```
 
-| Ord | Betyder |
-|---|---|
-| `OUTPUT` | pinnen **skickar ut** ström, till exempel till en lampa |
-| `INPUT` | pinnen **lyssnar**, till exempel på en knapp |
+- `OUTPUT` = pinnen skickar ut ström (till exempel till en lampa)
+- `INPUT` = pinnen läser av något (till exempel en knapp)
 
-## Kod med förklaringar
+## Koden rad för rad
+**HIGH tänder, LOW släcker och delay väntar. Loop gör att det upprepas.**
 
-> **Kort sagt:** HIGH tänder lampan, LOW släcker den, och delay väntar. Det upprepas, så lampan blinkar.
-
-Hela koden finns i filen [blink.ino](blink.ino).
+Hela koden ligger i [blink.ino](blink.ino).
 
 ```cpp
 void setup() {
   pinMode(D1, OUTPUT);     // D1 ska skicka ut ström
-  Serial.begin(115200);    // kortet får prata med datorn
+  Serial.begin(115200);    // så att kortet kan skriva till datorn
 }
 
 void loop() {
-  digitalWrite(D1, HIGH);        // ström PÅ  → lampan tänds
-  Serial.println("Lampa på");    // skriv till datorn
-  delay(500);                    // vänta en halv sekund
+  digitalWrite(D1, HIGH);        // ström på, lampan tänds
+  Serial.println("Lampa på");
+  delay(500);                    // vänta 0,5 sekunder
 
-  digitalWrite(D1, LOW);         // ström AV  → lampan släcks
-  Serial.println("Lampa av");    // skriv till datorn
-  delay(500);                    // vänta en halv sekund
+  digitalWrite(D1, LOW);         // ström av, lampan släcks
+  Serial.println("Lampa av");
+  delay(500);                    // vänta 0,5 sekunder
 }
 ```
 
-**Förklaring:**
-| Kod | Betyder |
-|---|---|
-| `HIGH` | ström **på** |
-| `LOW` | ström **av** |
-| `delay(500)` | **vänta** 500 millisekunder (en halv sekund) |
-
-Eftersom koden ligger i **loop** händer det om och om igen. Därför **blinkar** lampan.
-
-Kortet skriver också till datorn. Öppna **Serial Monitor** och välj **115200**:
+I Serial Monitor (115200) kunde jag se att koden körde, samtidigt som lampan blinkade:
 
 ![Serial Monitor](bilder/serial-monitor.jpg)
 
-## Om något krånglar
+## Det här gick fel för mig
+**De flesta problemen satt i kopplingen, inte i koden.**
 
-> **Kort sagt:** Lyser lampan inte är det oftast för att den sitter åt fel håll.
-
-| Problem | Prova det här |
-|---|---|
-| Lampan lyser inte | **Vänd** på lampan |
-| En vit lampa lyser inte | Använd en **röd** lampa, den behöver mindre ström |
-| Felet `bad CPU type` på Mac | Skriv i Terminal: `softwareupdate --install-rosetta --agree-to-license` |
+- **Fel på Macen:** `bad CPU type in executable`.
+  Löstes med Rosetta i Terminal:
+  `softwareupdate --install-rosetta --agree-to-license`
+- **Den vita lampan lyste inte.** Jag bytte till en röd, som behöver mindre ström.
+- **Delarna satt i fel rader.** På kopplingsdäcket har bara hål i samma rad kontakt.
+- **Lyser lampan inte alls?** Vänd på den.
